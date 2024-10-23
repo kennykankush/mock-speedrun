@@ -14,7 +14,7 @@ public class fileManagement {
         switch(configuration){
             case "head":
                 for (int i = 1; i < row + 1; i++){
-                System.out.print(i + "| ");
+                System.out.print(i + " | ");
                 System.out.println(Arrays.toString(list.get(i).toArray()));
                 }
                 break;
@@ -23,7 +23,7 @@ public class fileManagement {
                 int START_AT = size - row;
             
                 for (int i = START_AT; i < size; i++){
-                    System.out.print(i + "| ");
+                    System.out.print(i + " | ");
                     System.out.println(Arrays.toString(list.get(i).toArray()));
                 }
                 break;
@@ -37,7 +37,19 @@ public class fileManagement {
         }
     }
 
-    public List<storeApp> csvReader(String fileName){
+    public List<storeApp> trim(List<storeApp> list, Integer row){
+
+        List<storeApp> trimmedList = new ArrayList<>();
+
+        for (int i = 0; i <= row; i++){
+            trimmedList.add(list.get(i));
+        }
+
+        return trimmedList;
+
+    }
+
+    public List<storeApp> csvReader(String fileName) throws FileNotFoundException, IOException{
 
             // Directory Handling
 
@@ -62,7 +74,7 @@ public class fileManagement {
             // A good check to see if file exist in the folder
 
             if (file.exists()){
-                System.out.println(file.toString() + " exist!");
+                System.out.println(file.toString() + " found!");
             } else {
                 System.out.println(file.toString() + " does not exist");
             }
@@ -72,33 +84,35 @@ public class fileManagement {
             List<storeApp> database = new ArrayList<>();
             
 
-                //Hire a File Reader and set him to slow mode
-            try { BufferedReader br = new BufferedReader(new FileReader(file));
+            //Hire a File Reader and set him to slow mode
+            // try { 
+            BufferedReader br = new BufferedReader(new FileReader(file));
     
-                //Catcher machine, process and put in container
+            //Catcher machine, process and put in container
 
-                while ((line = br.readLine()) != null){
-                    // System.out.println(line);
-                    String[] lineData = line.split(",");
+            while ((line = br.readLine()) != null){
+                // System.out.println(line);
+                String[] lineData = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); //!https://stackoverflow.com/questions/15738918/splitting-a-csv-file-with-quotes-as-text-delimiter-using-string-split
 
-                    storeApp create = new storeApp(lineData[0], lineData[1], lineData[2]);
-                    database.add(create);
-
-                    }
- 
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-                // System.out.println("File not found!");
-            } catch (IOException e){
-                e.printStackTrace();
-                // System.out.println("Something's wrong!");
+                storeApp create = new storeApp(lineData[0], lineData[1], lineData[2]);
+                database.add(create);
 
             }
+ 
+            // } catch (FileNotFoundException e){
+            //     e.printStackTrace();
+            //     // System.out.println("File not found!");
+            // } catch (IOException e){
+            //     e.printStackTrace();
+            //     // System.out.println("Something's wrong!");
+
+            // }
 
             return database;
         
     }
 
+    public void csvWriter(){
 
-
+    }
 }
